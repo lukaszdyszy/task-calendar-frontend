@@ -1,5 +1,9 @@
 <template>
     <div class="panel">
+        <Add :shown="newTask"></Add>
+        <div class="newTask" @click="newTask=true">
+            <i class="fas fa-plus-circle fa-3x"></i>
+        </div>
         <div class="tob-bar">
             <i class="fas fa-bars fa-2x" @click="lOpen = !lOpen"></i>
         </div>
@@ -11,7 +15,15 @@
         <main v-if="loading == false">
             <div class="container">
                 <div class="date-bar">
-                    {{ parseDate }}
+                   <div @click="prevDate()">
+                       &lt;
+                   </div>
+                   <div>
+                       {{ parseDate }}
+                   </div>
+                   <div @click="nextDate()">
+                       &gt;
+                   </div>
                 </div>
                 <Task v-for="task in tasks" 
                 :p_id="task.ID" 
@@ -27,11 +39,13 @@
 <script>
 import API from '../API';
 import Task from '../components/Task';
+import Add from '../components/Add';
 
 export default {
     name: 'Panel',
     components: {
-        Task
+        Task,
+        Add
     },
     data(){
         return {
@@ -40,7 +54,8 @@ export default {
             lOpen: false,
             date: '',
             tasks: [],
-            loading: true
+            loading: true,
+            newTask: false
         }
     },
     methods: {
@@ -71,9 +86,22 @@ export default {
             this.tasks = [];
             this.$http.get(API + 'tasks/?user_id='+self.id+'&date_time='+self.parseDate)
             .then(function(response){
-                console.log(response);
                 self.tasks = response.body;
             })
+        },
+        prevDate(){
+            let store_date = this.date;
+            this.date = 'x',
+            store_date.setDate(store_date.getDate() - 1);
+            this.date = store_date;
+            this.getTasks();
+        },
+        nextDate(){
+            let store_date = this.date;
+            this.date = 'x',
+            store_date.setDate(store_date.getDate() + 1);
+            this.date = store_date;
+            this.getTasks();
         }
     },
     computed: {
@@ -152,10 +180,20 @@ button.logout{
     padding: 10px;
 }
 .date-bar{
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
     border-top: 3px double;
     border-bottom: 3px double;
     padding: 10px;
+}
+
+
+
+.newTask{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: green;
 }
 
 </style>

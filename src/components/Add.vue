@@ -2,17 +2,15 @@
     <div class="add" :class="{'shown': shown}">
         <div class="form">
             <div class="field">
-                <label for="title">Title</label>
-                <br>
-                <input type="text" id="title" v-model="title">
+                <input type="text" id="title" v-model="title" placeholder="Title">
             </div>
             <div class="field">
-                <label for="date">When</label>
+                <input type="date" id="date" v-model="date">
                 <br>
-                <input type="date" id="date" v-model="date_time">
+                <input type="time" id="time" v-model="time">
             </div>
             <div class="field">
-                <button class="confirm">confirm</button>
+                <button class="confirm" @click="sendAdd()">confirm</button>
             </div>
             <div class="field">
                 <button class="confirm cancel" @click="$parent.newTask = false">Cancel</button>
@@ -22,6 +20,8 @@
 </template>
 
 <script>
+import API from '../API';
+
 export default {
     name: 'Add',
     props: {
@@ -30,13 +30,56 @@ export default {
     data(){
         return {
             title: '',
-            date_time: ''
+            date: '',
+            time: ''
         }
+    },
+    methods: {
+        sendAdd(){
+            let self = this;
+            this.$http.post(API + 'tasks/', {
+                user_id: self.$parent.id,
+                title: self.title,
+                date_time: self.dateTime
+            }).then(function(response){
+                console.log(response.body);
+                self.$parent.newTask = false;
+                self.$parent.getTasks();
+            })
+        }
+    },
+    computed: {
+        dateTime(){
+            return this.date + ' ' + this.time;
+        }
+    },
+    created(){
+        let today = new Date();
+
+        let Y = today.getFullYear();
+        let M = today.getMonth()+1;
+        let D = today.getDate();
+
+        if(M < 10){M = '0'+M;}
+        if(D < 10){D = '0'+D;}
+
+        this.date = Y + '-' + M + '-' + D;
+
+        let H = today.getHours();
+        let I = today.getMinutes();
+        if(H < 10){H = '0'+H;}
+        if(I < 10){I = '0'+I;}
+        this.time = H + ':' + I;
     }
 }
 </script>
 
 <style lang="scss" scoped>
+.test{
+    position: fixed;
+    top: 10px;
+    color: white;
+}
 
 .add {
     position: fixed;
@@ -75,6 +118,9 @@ input, button.confirm{
     &:focus{
         outline: none;
     }
+}
+#date, #time{
+    text-align: center;
 }
 
 button.confirm{

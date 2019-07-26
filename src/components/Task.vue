@@ -72,7 +72,6 @@ export default {
         this.title = this.p_title;
         this.date_time = this.p_date_time;
         this.done = this.p_done;
-        console.log(this.id);
     }
 }
 </script>
