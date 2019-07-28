@@ -9,15 +9,34 @@
                 <div class="caption">delete</div>
                 <i class="fas fa-trash-alt"></i>
             </div>
-            <div class="tool edit">
+            <div class="tool edit" @click="edition()">
                 <div class="caption">edit</div>
                 <i class="fas fa-pen"></i>
             </div>
             <div class="date">
-                {{ date_time.split(' ')[1] }}
+                {{ date_time.split(' ')[1].slice(0,5) }}
             </div>
         </div>
         <div class="title">{{ title }}</div>
+
+        <div class="edit-form" :class="{'show-edit': showEdit}">
+            <div class="form">
+                <div class="field">
+                    <input type="text" id="title" v-model="title" placeholder="Title">
+                </div>
+                <div class="field">
+                    <input type="date" id="date" v-model="edited.date">
+                    <br>
+                    <input type="time" id="time" v-model="edited.time">
+                </div>
+                <div class="field">
+                    <button class="confirm" @click="confirmEdition()">confirm</button>
+                </div>
+                <div class="field">
+                    <button class="confirm cancel" @click="showEdit = false">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -37,7 +56,12 @@ export default {
             id: 0,
             title: '',
             date_time: '',
-            done: false
+            done: false,
+            showEdit: false,
+            edited: {
+                date: '',
+                time: ''
+            }
         }
     },
     methods: {
@@ -65,6 +89,18 @@ export default {
         markDone(){
             this.done = !this.done;
             this.sendEdit();
+        },
+        edition(){
+            this.edited.date = this.date_time.split(' ')[0];
+            this.edited.time = this.date_time.split(' ')[1];
+
+            this.showEdit = true;
+        },
+        confirmEdition(){
+            this.date_time = this.edited.date + ' ' + this.edited.time;
+            this.sendEdit();
+            
+            this.showEdit = false;
         }
     },
     created(){
@@ -136,6 +172,59 @@ export default {
 }
 .title{
     margin-left: 7px;
+}
+
+
+// edit form
+.edit-form{
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+.form{
+    width: 100%;
+    padding: 15px 5px;
+    background-color: rgb(223, 223, 223);
+    display: flex;
+    flex-direction: column;
+    color: black;
+}
+.field{
+    margin: 13px 0;
+}
+
+input, button.confirm{
+    border: none;
+    padding: 5px;
+    width: 100%;
+    font-size: 1.2rem;
+    &:focus{
+        outline: none;
+    }
+}
+#date, #time{
+    text-align: center;
+}
+
+button.confirm{
+    background-color: rgb(20, 235, 116);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+button.cancel{
+    background-color: rgb(194, 228, 1);
+}
+
+.show-edit{
+    display: flex;
 }
 
 </style>
