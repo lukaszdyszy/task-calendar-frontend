@@ -9,7 +9,7 @@
                 <div class="caption">delete</div>
                 <i class="fas fa-trash-alt"></i>
             </div>
-            <div class="tool edit" @click="edition()">
+            <div class="tool edit" @click="taskForm = true">
                 <div class="caption">edit</div>
                 <i class="fas fa-pen"></i>
             </div>
@@ -19,63 +19,38 @@
         </div>
         <div class="title">{{ title }}</div>
 
-        <div class="edit-form" :class="{'show-edit': showEdit}">
-            <div class="form">
-                <div class="field">
-                    <input type="text" id="title" v-model="title" placeholder="Title">
-                </div>
-                <div class="field">
-                    <input type="date" id="date" v-model="edited.date">
-                    <br>
-                    <input type="time" id="time" v-model="edited.time">
-                </div>
-                <div class="field">
-                    <button class="confirm" @click="confirmEdition()">confirm</button>
-                </div>
-                <div class="field">
-                    <button class="confirm cancel" @click="showEdit = false">Cancel</button>
-                </div>
-            </div>
-        </div>
+        <TaskForm mode="edit" 
+        :id="id" 
+        :p_title="title" 
+        :p_date_time="date_time" 
+        :shown="taskForm">
+        </TaskForm>
+
     </div>
 </template>
 
 <script>
 import API from '../API';
+import TaskForm from './TaskForm';
 
 export default {
+    components: {
+        TaskForm
+    },
     name: 'Task',
     props: {
-        p_id: Number,
-        p_title: String,
-        p_date_time: String,
+        id: Number,
+        title: String,
+        date_time: String,
         p_done: Boolean
     },
     data(){
         return {
-            id: 0,
-            title: '',
-            date_time: '',
             done: false,
-            showEdit: false,
-            edited: {
-                date: '',
-                time: ''
-            }
+            taskForm: false
         }
     },
     methods: {
-        sendEdit(){
-            let self = this;
-            this.$http.put(API + 'tasks/', {
-                id: self.id,
-                title: self.title,
-                date_time: self.date_time,
-                done: self.done
-            }).then(function(response){
-                console.log(response);
-            })
-        },
         delTask(){
             let self = this;
             this.$http.delete(API + 'tasks/', {body: {
@@ -88,25 +63,20 @@ export default {
         },
         markDone(){
             this.done = !this.done;
-            this.sendEdit();
+            let self = this;
+            this.$http.put(API + 'tasks/', {
+                id: self.id,
+                done: self.done
+            }).then(function(response){
+                console.log(response);
+                self.$parent.getTasks();
+            })
         },
-        edition(){
-            this.edited.date = this.date_time.split(' ')[0];
-            this.edited.time = this.date_time.split(' ')[1];
-
-            this.showEdit = true;
-        },
-        confirmEdition(){
-            this.date_time = this.edited.date + ' ' + this.edited.time;
-            this.sendEdit();
-            
-            this.showEdit = false;
+        reload(){
+            this.$parent.getTasks();
         }
     },
     created(){
-        this.id = this.p_id;
-        this.title = this.p_title;
-        this.date_time = this.p_date_time;
         this.done = this.p_done;
     }
 }
@@ -172,59 +142,6 @@ export default {
 }
 .title{
     margin-left: 7px;
-}
-
-
-// edit form
-.edit-form{
-    position: fixed;
-    z-index: 1000;
-    width: 100%;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
-}
-.form{
-    width: 100%;
-    padding: 15px 5px;
-    background-color: rgb(223, 223, 223);
-    display: flex;
-    flex-direction: column;
-    color: black;
-}
-.field{
-    margin: 13px 0;
-}
-
-input, button.confirm{
-    border: none;
-    padding: 5px;
-    width: 100%;
-    font-size: 1.2rem;
-    &:focus{
-        outline: none;
-    }
-}
-#date, #time{
-    text-align: center;
-}
-
-button.confirm{
-    background-color: rgb(20, 235, 116);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-}
-button.cancel{
-    background-color: rgb(194, 228, 1);
-}
-
-.show-edit{
-    display: flex;
 }
 
 </style>

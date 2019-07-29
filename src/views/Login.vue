@@ -1,12 +1,14 @@
 <template>
-    <div class="login">
-        <h1>Sign In</h1>
-        <div class="form">
-            <input type="text" v-model="email" placeholder="e-mail">
-            <input type="password" v-model="password" placeholder="password">
-            <button class="loging" @click="login">Sign in</button>
-            <button class="registration">Sign up</button>
-            <span class="error" v-if="error">Wrong email or password</span>
+    <div class="login-container">
+        <div class="login">
+            <h1>Sign In</h1>
+            <div class="form">
+                <input type="text" v-model="email" placeholder="e-mail">
+                <input type="password" v-model="password" placeholder="password">
+                <button class="loging" @click="login">Sign in</button>
+                <button class="registration">Sign up</button>
+                <span class="error" v-if="error">Wrong email or password</span>
+            </div>
         </div>
     </div>
 </template>
@@ -51,14 +53,19 @@ export default {
 
 <style lang="scss" scoped>
 
-.login{
+.login-container{
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.login{
+    width: 100%;
+    max-width: 350px;
     padding: 10px;
-    flex-direction: column;
+    text-align: center;
 }
 
 .form{

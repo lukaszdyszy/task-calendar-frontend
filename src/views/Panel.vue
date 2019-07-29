@@ -1,7 +1,7 @@
 <template>
     <div class="panel">
-        <Add :shown="newTask"></Add>
-        <div class="newTask" @click="newTask=true">
+        <TaskForm v-if="loading==false" mode="add" :shown="taskForm" :p_date_time="parseDate+' '+parseTime"></TaskForm>
+        <div class="newTask" @click="taskForm=true">
             <i class="fas fa-plus-circle fa-3x"></i>
         </div>
         <div class="tob-bar">
@@ -12,24 +12,24 @@
             <span class="name">{{ email }}</span>
             <button @click="logout()" class="logout">Sign out</button>
         </div>
-        <main v-if="loading == false">
+        <main class="main" v-if="loading == false">
             <div class="container">
                 <div class="date-bar">
-                   <div @click="prevDate()">
+                   <div class="arrow" @click="prevDate()">
                        &lt;
                    </div>
                    <div>
                        {{ parseDate }}
                    </div>
-                   <div @click="nextDate()">
+                   <div class="arrow" @click="nextDate()">
                        &gt;
                    </div>
                 </div>
                 <Task v-for="task in tasks" 
-                :p_id="task.ID" 
-                :p_title="task.title" 
+                :id="task.ID" 
+                :title="task.title" 
                 :p_done="Boolean(+task.done)" 
-                :p_date_time="task.date_time"
+                :date_time="task.date_time"
                 ></Task>
             </div>
         </main>
@@ -39,13 +39,13 @@
 <script>
 import API from '../API';
 import Task from '../components/Task';
-import Add from '../components/Add';
+import TaskForm from '../components/TaskForm';
 
 export default {
     name: 'Panel',
     components: {
         Task,
-        Add
+        TaskForm
     },
     data(){
         return {
@@ -55,7 +55,7 @@ export default {
             date: '',
             tasks: [],
             loading: true,
-            newTask: false
+            taskForm: false
         }
     },
     methods: {
@@ -102,6 +102,9 @@ export default {
             store_date.setDate(store_date.getDate() + 1);
             this.date = store_date;
             this.getTasks();
+        },
+        reload(){
+            this.getTasks();
         }
     },
     computed: {
@@ -113,7 +116,18 @@ export default {
             if(M < 10){M = '0'+M;}
             if(D < 10){D = '0'+D;}
 
-            return Y + '-' + M + '-' + D;
+            return Y+'-'+M+'-'+D;
+        },
+        parseTime(){
+            let H = this.date.getHours();
+            let I = this.date.getMinutes();
+            let S = this.date.getSeconds();
+
+            if(H < 10){H = '0'+H;}
+            if(I < 10){I = '0'+I;}
+            if(S < 10){S = '0'+S;}
+
+            return H+':'+I;
         }
     },
     created(){
@@ -175,7 +189,7 @@ button.logout{
 
 
 .container{
-    max-width: 600px;
+    max-width: 720px;
     margin: 100px auto;
     padding: 10px;
 }
@@ -194,6 +208,29 @@ button.logout{
     bottom: 20px;
     right: 20px;
     color: green;
+}
+
+.arrow{
+    cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+    .panel{
+        display: flex;
+    }
+    .left-pane{
+        position: relative;
+        top: 0;
+        left: 0;
+        flex: 1;
+        max-width: 300px;
+    }
+    main.main{
+        flex: 4;
+    }
+    .fa-times{
+        display: none;
+    }
 }
 
 </style>
