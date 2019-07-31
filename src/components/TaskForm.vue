@@ -14,9 +14,6 @@
                 <button class="confirm" v-if="mode=='edit'" @click="edit()">confirm</button>
                 <button class="confirm" v-if="mode=='add'" @click="add()">confirm</button>
             </div>
-            <div class="field">
-                <button class="confirm cancel">Cancel</button>
-            </div>
         </div>
     </div>
 </template>
@@ -44,7 +41,6 @@ export default {
         add(){
             let self = this;
             this.$http.post(API + 'tasks/', {
-                user_id: self.$parent.id,
                 title: self.title,
                 date_time: self.date + ' ' + self.time
             }).then(function(response){

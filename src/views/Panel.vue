@@ -19,7 +19,7 @@
                        &lt;
                    </div>
                    <div>
-                       {{ parseDate }}
+                       <date-picker v-model="date" @change="getTasks()" lang="en" :defaultDate="date"></date-picker>
                    </div>
                    <div class="arrow" @click="nextDate()">
                        &gt;
@@ -40,12 +40,14 @@
 import API from '../API';
 import Task from '../components/Task';
 import TaskForm from '../components/TaskForm';
+import DatePicker from 'vue2-datepicker-improved';
 
 export default {
     name: 'Panel',
     components: {
         Task,
-        TaskForm
+        TaskForm,
+        DatePicker
     },
     data(){
         return {
@@ -53,6 +55,7 @@ export default {
             email: '',
             lOpen: false,
             date: '',
+            datePicker: '',
             tasks: [],
             loading: true,
             taskForm: false
@@ -84,23 +87,21 @@ export default {
         getTasks(){
             let self = this;
             this.tasks = [];
-            this.$http.get(API + 'tasks/?user_id='+self.id+'&date_time='+self.parseDate)
+            this.$http.get(API + 'tasks/?date_time='+self.parseDate)
             .then(function(response){
                 self.tasks = response.body;
             })
         },
         prevDate(){
-            let store_date = this.date;
-            this.date = 'x',
-            store_date.setDate(store_date.getDate() - 1);
-            this.date = store_date;
+            let newDate = new Date(this.date);
+            newDate.setDate(newDate.getDate()-1);
+            this.date = newDate;
             this.getTasks();
         },
         nextDate(){
-            let store_date = this.date;
-            this.date = 'x',
-            store_date.setDate(store_date.getDate() + 1);
-            this.date = store_date;
+            let newDate = new Date(this.date);
+            newDate.setDate(newDate.getDate()+1);
+            this.date = newDate;
             this.getTasks();
         },
         reload(){
@@ -196,6 +197,7 @@ button.logout{
 .date-bar{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-top: 3px double;
     border-bottom: 3px double;
     padding: 10px;
@@ -212,6 +214,7 @@ button.logout{
 
 .arrow{
     cursor: pointer;
+    font-size: 2rem;
 }
 
 @media (min-width: 1024px) {
