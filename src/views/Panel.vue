@@ -209,7 +209,12 @@ button.logout{
     position: fixed;
     bottom: 20px;
     right: 20px;
-    color: green;
+    color: rgb(0, 109, 0);
+    opacity: 0.7;
+    &:hover{
+        cursor: pointer;
+        opacity: 1;
+    }
 }
 
 .arrow{
@@ -233,6 +238,11 @@ button.logout{
     }
     .fa-times{
         display: none;
+    }
+    .newTask {
+        font-size: 1.5rem;
+        bottom: 35px;
+        right: 35px;
     }
 }
 

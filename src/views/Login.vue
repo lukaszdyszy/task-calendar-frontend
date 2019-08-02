@@ -6,7 +6,8 @@
                 <input type="text" v-model="email" placeholder="e-mail">
                 <input type="password" v-model="password" placeholder="password">
                 <button class="loging" @click="login">Sign in</button>
-                <button class="registration">Sign up</button>
+                <router-link to="/registration">Sign up</router-link>
+                <!-- <button class="registration">Sign up</button> -->
                 <span class="error" v-if="error">Wrong email or password</span>
             </div>
         </div>
@@ -112,6 +113,14 @@ button{
         border: 1px solid rgb(179, 179, 179);
         margin: 25px 0 10px 0;
     }
+}
+
+a{
+    display: block;
+    border-radius: 15px;
+    padding: 7px;
+    margin: 10px 0;
+    background-color: rgb(47, 211, 240);
 }
 
 span.error{
