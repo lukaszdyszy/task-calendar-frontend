@@ -3,7 +3,7 @@
         <div class="shadow" @click="$parent.taskForm = false"></div>
         <div class="form">
             <div class="field">
-                <input type="text" id="title" v-model="title" placeholder="Title">
+                <input type="text" v-model="title" placeholder="Title">
             </div>
             <div class="field">
                 <input type="date" class="date-input" v-model="date">
@@ -39,23 +39,25 @@ export default {
     },
     methods: {
         add(){
-            let self = this;
-            this.$http.post(API + 'tasks/', {
-                title: self.title,
-                date_time: self.date + ' ' + self.time
+            this.$http.post(API + 'tasks/add.php', {
+                title: this.title,
+                date_time: this.date + ' ' + this.time
+            }, {
+                'Content-Type': 'application/json',
+                'withCredentials': true
             }).then(function(response){
-                console.log(response.body);
                 this.$parent.reload();
             })
         },
         edit(){
-            let self = this;
-            this.$http.put(API + 'tasks/', {
-                id: self.id,
-                title: self.title,
-                date_time: self.date + ' ' + self.time
+            this.$http.post(API + 'tasks/edit.php', {
+                id: this.id,
+                title: this.title,
+                date_time: this.date + ' ' + this.time
+            }, {
+                'Content-Type': 'application/json',
+                'withCredentials': true
             }).then(function(response){
-                console.log(response);
                 this.$parent.reload();
             })
         }

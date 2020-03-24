@@ -63,35 +63,33 @@ export default {
     },
     methods: {
         isLogged(){
-            let self = this;
             this.$http.get(API + 'users/islogged.php', {
                 'withCredentials': true
             }).then(function(response){
                 if(response.body.logged == false){
-                    self.$router.push('/');
+                    this.$router.push('/');
                 } else {
-                    self.id = response.body.id;
-                    self.email = response.body.email;
-                    self.date = new Date();
-                    self.loading = false;
-                    self.getTasks();
+                    this.id = response.body.id;
+                    this.email = response.body.email;
+                    this.date = new Date();
+                    this.loading = false;
+                    this.getTasks();
                 }
             });
         },
         logout(){
-            let self = this;
             this.$http.get(API + 'users/logout.php', {
                 'withCredentials': true
             }).then(function(response){
-                self.isLogged();
+                this.isLogged();
             });
         },
         getTasks(){
-            let self = this;
             this.tasks = [];
-            this.$http.get(API + 'tasks/?date_time='+self.parseDate)
-            .then(function(response){
-                self.tasks = response.body;
+            this.$http.get(API + 'tasks/get.php?date_time='+this.parseDate, {
+                'withCredentials': true
+            }).then(function(response){
+                this.tasks = response.body;
             })
         },
         prevDate(){

@@ -34,7 +34,6 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                console.log(response);
                 if(response.body.logged){
                     this.$router.push('/panel');
                 } else {
@@ -48,7 +47,6 @@ export default {
         this.$http.get(API + 'users/islogged.php', {
             'withCredentials': true
         }).then(function(response){
-            console.log(response);
             if(response.body.logged){
                 self.$router.push('/panel');
             }

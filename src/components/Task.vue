@@ -52,24 +52,25 @@ export default {
     },
     methods: {
         delTask(){
-            let self = this;
-            this.$http.delete(API + 'tasks/', {body: {
-                    id: self.id
-                }
+            this.$http.post(API + 'tasks/delete.php', {
+                id: this.id
+            }, {
+                'Content-Type': 'application/json',
+                'withCredentials': true
             }).then(function(response){
-                console.log(response);
-                self.$parent.getTasks();
+                this.$parent.getTasks();
             })
         },
         markDone(){
             this.done = !this.done;
-            let self = this;
-            this.$http.put(API + 'tasks/', {
-                id: self.id,
-                done: self.done
+            this.$http.post(API + 'tasks/edit.php', {
+                id: this.id,
+                done: this.done
+            }, {
+                'Content-Type': 'application/json',
+                'withCredentials': true
             }).then(function(response){
-                console.log(response);
-                self.$parent.getTasks();
+                this.$parent.getTasks();
             })
         },
         reload(){
