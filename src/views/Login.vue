@@ -2,14 +2,13 @@
     <div class="login-container">
         <div class="login">
             <h1>Sign In</h1>
-            <div class="form">
+            <form class="login-form" @submit.prevent="login">
                 <input type="text" v-model="email" placeholder="e-mail">
                 <input type="password" v-model="password" placeholder="password">
-                <button class="loging" @click="login">Sign in</button>
+                <input type="submit" class="loging" @click="login" value="Sign in">
                 <router-link to="/registration">Sign up</router-link>
-                <!-- <button class="registration">Sign up</button> -->
                 <span class="error" v-if="error">Wrong email or password</span>
-            </div>
+            </form>
         </div>
     </div>
 </template>
@@ -21,29 +20,35 @@ export default {
     name: 'Login',
     data(){
         return {
-            email: '',
-            password: '',
+            email: 'antek@gmail.com',
+            password: 'antek',
             error: false
         }
     },
     methods: {
         login(){
-            let self = this;
             this.$http.post(API + 'users/login.php', {
-                email: self.email,
-                password: self.password
+                email: this.email,
+                password: this.password
+            }, {
+                'Content-Type': 'application/json',
+                'withCredentials': true
             }).then(function(response){
+                console.log(response);
                 if(response.body.logged){
-                    self.$router.push('/panel');
+                    this.$router.push('/panel');
                 } else {
-                    self.error = true;
+                    this.error = true;
                 }
             })
         }
     },
     created(){
         let self = this;
-        this.$http.get(API + 'users/islogged.php').then(function(response){
+        this.$http.get(API + 'users/islogged.php', {
+            'withCredentials': true
+        }).then(function(response){
+            console.log(response);
             if(response.body.logged){
                 self.$router.push('/panel');
             }
@@ -69,7 +74,7 @@ export default {
     text-align: center;
 }
 
-.form{
+form.login-form{
     width: 100%;
     background-color: rgb(255, 255, 255);
     box-shadow: 0px 7px 10px 3px rgba(255,255,255,0.75);
@@ -95,23 +100,12 @@ input{
         outline: none;
         border-bottom: 1px solid rgb(148, 148, 148);
     }
-}
-
-button{
-    border: none;
-    border-radius: 15px;
-    padding: 7px;
-    margin: 10px 0;
-    &:focus{
-        outline: none;
-    }
-    &.registration{
-        background-color: rgb(47, 211, 240);
-    }
     &.loging{
         background-color: white;
         border: 1px solid rgb(179, 179, 179);
         margin: 25px 0 10px 0;
+        border-radius: 15px;
+        padding: 7px;
     }
 }
 

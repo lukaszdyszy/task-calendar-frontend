@@ -1,2 +1,2 @@
-const API = 'http://127.0.0.1/task-calendar/api/';
+const API = 'http://localhost/task-calendar-backend/api/';
 export default API;

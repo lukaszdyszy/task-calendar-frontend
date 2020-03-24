@@ -64,8 +64,9 @@ export default {
     methods: {
         isLogged(){
             let self = this;
-            this.$http.get(API + 'users/islogged.php')
-            .then(function(response){
+            this.$http.get(API + 'users/islogged.php', {
+                'withCredentials': true
+            }).then(function(response){
                 if(response.body.logged == false){
                     self.$router.push('/');
                 } else {
@@ -79,8 +80,9 @@ export default {
         },
         logout(){
             let self = this;
-            this.$http.get(API + 'users/logout.php')
-            .then(function(response){
+            this.$http.get(API + 'users/logout.php', {
+                'withCredentials': true
+            }).then(function(response){
                 self.isLogged();
             });
         },
