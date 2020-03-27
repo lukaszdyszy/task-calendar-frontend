@@ -8,9 +8,11 @@
                 <input type="password" v-model="password" placeholder="password">
                 <input type="password" v-model="r_password" placeholder="repeat password">
                 <span class="error" v-if="e_password.length > 0">{{ e_password }}</span>
+                <div class="g-recaptcha" :data-sitekey="sitekey"></div>
                 <input type="submit" class="registration" value="Sign up">
                 <button class="logging" @click="$router.push('/')">Sign in</button>
-                <span class="message">{{ message }}</span>
+                <span class="message" :class="{'error': e_message}">{{ message }}</span>
+                <div class="lds-ellipsis" v-if="waitingForResponse"><div></div><div></div><div></div><div></div></div>
             </form>
         </div>
     </div>
@@ -18,6 +20,7 @@
 
 <script>
 import API from '../API';
+import Sitekey from '../Sitekey.js';
 
 export default {
     name: 'Registration',
@@ -28,7 +31,10 @@ export default {
             r_password: '',
             e_email: '',
             e_password: '',
-            message: ''
+            message: '',
+            sitekey: Sitekey,
+            waitingForResponse: false,
+            e_message: false
         }
     },
     methods: {
@@ -39,18 +45,37 @@ export default {
                 this.e_email = 'Wrong email';
             } else if(this.password != this.r_password){
                 this.e_password = 'Passwords not match';
+            } else if(!(RegExp('[a-z]{1,}').test(String(this.password)) && 
+            RegExp('[A-Z]{1,}').test(String(this.password)) && 
+            RegExp('[0-9]{1,}').test(String(this.password)) && 
+            RegExp('[!@#$&%?_-]{1,}').test(String(this.password)) && 
+            this.password.length>7)){
+                this.e_password = 'Password must contain min. 8 characters, uppercase, lowercase and special sign.';
             } else {
-                this.e_email = '';
-                this.e_password = '';
-
+                this.waitingForResponse = true;
                 this.$http.post(API + 'users/register.php', {
                     email: this.email,
-                    password: this.password
+                    password: this.password,
+                    captcha: grecaptcha.getResponse()
+                }, {
+                    'Content-Type': 'application/json'
                 }).then(function(response){
+                    console.log(response);
+                    this.waitingForResponse = false;
+                    if(response.body.error != 0){
+                        this.e_message = true;
+                    } else {
+                        this.e_message = false;
+                    }
                     this.message = response.body.message;
                 });
             }
         }
+    },
+    created(){
+        let script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js';
+        document.head.appendChild(script);
     }
 }
 </script>
@@ -125,5 +150,67 @@ span.error{
     text-align: center;
     padding: 12px 0;
 }
+
+
+// loading
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  div{
+    background-color: black;
+  }
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
 
 </style>
