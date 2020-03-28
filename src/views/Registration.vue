@@ -62,7 +62,7 @@ export default {
                 }).then(function(response){
                     console.log(response);
                     this.waitingForResponse = false;
-                    if(response.body.error != 0){
+                    if(response.body.Error != 0){
                         this.e_message = true;
                     } else {
                         this.e_message = false;
@@ -73,9 +73,15 @@ export default {
         }
     },
     created(){
-        let script = document.createElement('script');
-        script.src = 'https://www.google.com/recaptcha/api.js';
-        document.head.appendChild(script);
+      let script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js';
+      document.head.appendChild(script);
+    },
+    destroyed(){
+      let script1 = document.querySelector('script[src="https://www.google.com/recaptcha/api.js"]');
+      let script2 = document.querySelector('script[src="https://www.gstatic.com/recaptcha/releases/P6KLRNy7h3K160ZmYNUOAce7/recaptcha__pl.js"]');
+      document.head.removeChild(script1);
+      document.head.removeChild(script2);
     }
 }
 </script>
