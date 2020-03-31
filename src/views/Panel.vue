@@ -1,6 +1,7 @@
 <template>
     <div class="panel">
         <TaskForm v-if="loading==false" mode="add" :shown="taskForm" :p_date_time="parseDate+' '+parseTime"></TaskForm>
+        <ChangePassword :shown="changePasswordForm"/>
         <div class="newTask" @click="taskForm=true">
             <i class="fas fa-plus-circle fa-3x"></i>
         </div>
@@ -10,6 +11,10 @@
         <div class="left-pane" :class="{'open': lOpen}">
             <i class="fas fa-times" @click="lOpen = !lOpen"></i>
             <span class="name">{{ email }}</span>
+            <div class="tools">
+                <div class="hd">Tools</div>
+                <button @click="changePasswordForm=true">change password</button>
+            </div>
             <button @click="logout()" class="logout">Sign out</button>
         </div>
         <main class="main" v-if="loading == false">
@@ -40,6 +45,7 @@
 import API from '../API';
 import Task from '../components/Task';
 import TaskForm from '../components/TaskForm';
+import ChangePassword from '../components/ChangePassword';
 import DatePicker from 'vue2-datepicker-improved';
 
 export default {
@@ -47,7 +53,8 @@ export default {
     components: {
         Task,
         TaskForm,
-        DatePicker
+        DatePicker,
+        ChangePassword
     },
     data(){
         return {
@@ -58,7 +65,8 @@ export default {
             datePicker: '',
             tasks: [],
             loading: true,
-            taskForm: false
+            taskForm: false,
+            changePasswordForm: false
         }
     },
     methods: {
@@ -172,6 +180,25 @@ export default {
         transform: translateX(250px);
     }
 }
+.tools{
+    border: 3px solid rgb(202, 202, 202);
+    margin: 20px 0;
+    padding: 20px 5px;
+    position: relative;
+    .hd{
+        background-color: rgb(39, 39, 39);
+        position: absolute;
+        top: -15px;
+        left: 10px;
+        padding: 5px;
+        font-size: 1.07rem;
+    }
+    button{
+        width: 100%;
+        padding: 7px;
+    }
+}
+
 
 button.logout{
     width: calc(100% - 20px);
