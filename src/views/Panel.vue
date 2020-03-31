@@ -15,6 +15,7 @@
                 <div class="hd">Tools</div>
                 <button @click="changePasswordForm=true">change password</button>
             </div>
+            <SideCalendar v-if="renderCalendar"/>
             <button @click="logout()" class="logout">Sign out</button>
         </div>
         <main class="main" v-if="loading == false">
@@ -46,6 +47,7 @@ import API from '../API';
 import Task from '../components/Task';
 import TaskForm from '../components/TaskForm';
 import ChangePassword from '../components/ChangePassword';
+import SideCalendar from '../components/SideCalendar';
 import DatePicker from 'vue2-datepicker-improved';
 
 export default {
@@ -54,7 +56,8 @@ export default {
         Task,
         TaskForm,
         DatePicker,
-        ChangePassword
+        ChangePassword,
+        SideCalendar
     },
     data(){
         return {
@@ -66,7 +69,8 @@ export default {
             tasks: [],
             loading: true,
             taskForm: false,
-            changePasswordForm: false
+            changePasswordForm: false,
+            renderCalendar: true
         }
     },
     methods: {
@@ -182,7 +186,7 @@ export default {
 }
 .tools{
     border: 3px solid rgb(202, 202, 202);
-    margin: 20px 0;
+    margin: 35px 0;
     padding: 20px 5px;
     position: relative;
     .hd{

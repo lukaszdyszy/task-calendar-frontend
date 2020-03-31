@@ -46,7 +46,7 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.$parent.reload();
+                this.$router.go();
             })
         },
         edit(){
@@ -58,7 +58,7 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.$parent.reload();
+                this.$router.go();
             })
         }
     },
