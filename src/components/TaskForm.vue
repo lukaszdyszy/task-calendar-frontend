@@ -1,19 +1,14 @@
 <template>
     <div class="task-form" :class="{'shown': shown}">
-        <div class="shadow" @click="$parent.taskForm = false"></div>
         <div class="form">
-            <div class="field">
+            <form @submit.prevent="send">
                 <input type="text" v-model="title" placeholder="Title">
-            </div>
-            <div class="field">
                 <input type="date" class="date-input" v-model="date">
                 <br>
                 <input type="time" class="time-input" v-model="time">
-            </div>
-            <div class="field">
-                <button class="confirm" v-if="mode=='edit'" @click="edit()">confirm</button>
-                <button class="confirm" v-if="mode=='add'" @click="add()">confirm</button>
-            </div>
+                <input type="submit" value="confirm">
+            </form>
+            <button class="cancel" @click="cancel">cancel</button>
         </div>
     </div>
 </template>
@@ -39,6 +34,13 @@ export default {
         }
     },
     methods: {
+        send(){
+            if(this.mode == 'add'){
+                this.add();
+            } else {
+                this.edit();
+            }
+        },
         add(){
             this.$http.post(API + 'tasks/add.php', {
                 title: this.title,
@@ -63,6 +65,9 @@ export default {
                 this.$router.push('/panel/'+this.date);
                 this.$router.go();
             })
+        },
+        cancel(){
+            this.$parent.taskForm = false;
         }
     },
     watch:{
@@ -92,55 +97,47 @@ export default {
     height: 100vh;
     top: 0;
     left: 0;
-    display: none;
-}
-.shadow{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: rgba(0, 0, 0, 0.445);
+    z-index: 1000;
 }
+
 .form{
-    width: 100%;
-    max-width: 500px;
-    position: absolute;
-    z-index: 1001;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background-color: rgba(255, 255, 255, 0.85);
     padding: 15px;
 }
-
-.shown{
-    display: block;
+form{
+    input{
+        border: none;
+        padding: 5px;
+        margin: 10px 0;
+        width: 100%;
+        font-size: 1.2rem;
+        &:focus{
+            outline: none;
+        }
+        &.date-input, &.time-input{
+            text-align: center;
+            margin: 2px 0;
+        }
+        &[type=submit]{
+            background-color: rgb(20, 235, 116);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+    }
 }
 
-.field{
-    margin: 13px 0;
-}
-
-input, button.confirm{
+button.cancel{
+    background-color: rgb(194, 228, 1);
     border: none;
     padding: 5px;
     width: 100%;
     font-size: 1.2rem;
-    &:focus{
-        outline: none;
-    }
-}
-.date-input, .time-input{
-    text-align: center;
-}
-
-button.confirm{
-    background-color: rgb(20, 235, 116);
     text-transform: uppercase;
     letter-spacing: 3px;
-}
-button.cancel{
-    background-color: rgb(194, 228, 1);
 }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="change-password" :class="{'shown': shown}">
+    <div class="change-password">
         <div class="form">
             <form @submit.prevent="changePass">
                 <input type="password" v-model="newPassword" placeholder="new password...">
@@ -83,13 +83,10 @@ export default {
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.445);
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-}
-.shown{
-    display: flex;
 }
 
 .form{

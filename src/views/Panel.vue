@@ -1,7 +1,7 @@
 <template>
     <div class="panel">
-        <TaskForm v-if="loading==false" mode="add" :shown="taskForm" :p_date_time="parseDate+' '+parseTime"></TaskForm>
-        <ChangePassword :shown="changePasswordForm"/>
+        <TaskForm v-if="loading==false && taskForm" mode="add" :p_date="parseDate" :p_time="parseTime"></TaskForm>
+        <ChangePassword v-if="changePasswordForm"/>
         <div class="newTask" @click="taskForm=true">
             <i class="fas fa-plus-circle fa-3x"></i>
         </div>
@@ -83,7 +83,6 @@ export default {
                 } else {
                     this.id = response.body.id;
                     this.email = response.body.email;
-                    this.date = new Date();
                     this.loading = false;
                     this.getTasks();
                 }
@@ -118,6 +117,9 @@ export default {
         },
         reload(){
             this.getTasks();
+            this.renderCalendar = false;
+            let self = this;
+            setTimeout(function(){self.renderCalendar=true;}, 100);
         }
     },
     computed: {
@@ -144,6 +146,11 @@ export default {
         }
     },
     created(){
+        if(typeof(this.$route.params.date) == 'string'){
+            this.date = new Date(this.$route.params.date);
+        } else {
+            this.date = new Date();
+        }
         this.isLogged();
     }
 }
@@ -162,6 +169,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 100;
 }
 .fa-times{
     position: absolute;
@@ -174,7 +182,7 @@ export default {
     height: 100vh;
     background-color: rgb(39, 39, 39);
     position: fixed;
-    z-index: 100;
+    z-index: 101;
     padding: 30px 10px 10px 10px;
     text-align: center;
     top: 0;

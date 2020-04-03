@@ -22,8 +22,9 @@
         <TaskForm mode="edit" 
         :id="id" 
         :p_title="title" 
-        :p_date_time="date_time" 
-        :shown="taskForm">
+        :p_date="date_time.split(' ')[0]"  
+        :p_time="date_time.split(' ')[1].slice(0, -3)" 
+        v-if="taskForm">
         </TaskForm>
 
     </div>
@@ -58,7 +59,7 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.$parent.getTasks();
+                this.reload();
             })
         },
         markDone(){
@@ -70,11 +71,11 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.$parent.getTasks();
+                this.reload();
             })
         },
         reload(){
-            this.$parent.getTasks();
+            this.$parent.reload();
         }
     },
     created(){

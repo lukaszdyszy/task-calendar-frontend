@@ -81,7 +81,6 @@ export default {
         },
         changeDate(d){
             let date = new Date(this.year, this.month, d);
-            console.log(date);
             this.$parent.date = date;
             this.$parent.getTasks();
         },
