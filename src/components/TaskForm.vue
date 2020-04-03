@@ -28,7 +28,8 @@ export default {
         mode: String,
         id: Number,
         p_title: String,
-        p_date_time: String
+        p_date: String,
+        p_time: String
     },
     data(){
         return{
@@ -46,6 +47,7 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
+                this.$router.push('/panel/'+this.date);
                 this.$router.go();
             })
         },
@@ -58,16 +60,25 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
+                this.$router.push('/panel/'+this.date);
                 this.$router.go();
             })
+        }
+    },
+    watch:{
+        p_date(){
+            this.date = this.p_date;
+        },
+        p_time(){
+            this.time = this.p_time;
         }
     },
     created(){
         if(this.mode == 'edit'){
             this.title = this.p_title;
         }
-        this.date = this.p_date_time.split(' ')[0];
-        this.time = this.p_date_time.split(' ')[1];
+        this.date = this.p_date;
+        this.time = this.p_time;
     }
 }
 </script>
