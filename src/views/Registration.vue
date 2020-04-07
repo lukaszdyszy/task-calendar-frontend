@@ -8,7 +8,9 @@
                 <input type="password" v-model="password" placeholder="password">
                 <input type="password" v-model="r_password" placeholder="repeat password">
                 <span class="error" v-if="e_password.length > 0">{{ e_password }}</span>
-                <div class="g-recaptcha" :data-sitekey="sitekey"></div>
+                <div id="c-div">
+                    <div class="g-recaptcha" :data-sitekey="sitekey"></div>
+                </div>
                 <input type="submit" class="registration" value="Sign up">
                 <button class="logging" @click="$router.push('/')">Sign in</button>
                 <span class="message" :class="{'error': e_message}">{{ message }}</span>
@@ -43,14 +45,19 @@ export default {
 
             if(e_test.test(String(this.email).toLowerCase()) == false){
                 this.e_email = 'Wrong email';
+                this.resetCaptcha();
             } else if(this.password != this.r_password){
+                this.e_email = '';
                 this.e_password = 'Passwords not match';
+                this.resetCaptcha();
             } else if(!(RegExp('[a-z]{1,}').test(String(this.password)) && 
             RegExp('[A-Z]{1,}').test(String(this.password)) && 
             RegExp('[0-9]{1,}').test(String(this.password)) && 
             RegExp('[!@#$&%?_-]{1,}').test(String(this.password)) && 
             this.password.length>7)){
+                this.e_email = '';
                 this.e_password = 'Password must contain min. 8 characters, uppercase, lowercase and special sign.';
+                this.resetCaptcha();
             } else {
                 this.waitingForResponse = true;
                 this.$http.post(API + 'users/register.php', {
@@ -63,24 +70,45 @@ export default {
                     this.waitingForResponse = false;
                     if(response.body.Error != 0){
                         this.e_message = true;
+                        this.resetCaptcha();
                     } else {
                         this.e_message = false;
                     }
+                    this.e_email = '';
+                    this.e_password = '';
                     this.message = response.body.message;
                 });
             }
+        },
+        addCaptcha(){
+            let script = document.createElement('script');
+            script.src = 'https://www.google.com/recaptcha/api.js';
+            document.head.appendChild(script);
+        },
+        removeCaptcha(){
+            let script1 = document.querySelector('script[src="https://www.google.com/recaptcha/api.js"]');
+            let script2 = document.querySelector('script[src^="https://www.gstatic.com"]');
+            document.head.removeChild(script1);
+            document.head.removeChild(script2);
+        },
+        resetCaptcha(){
+            let c_div = document.getElementById('c-div');
+            let captchaDiv = document.querySelector('#c-div > .g-recaptcha');
+            c_div.removeChild(captchaDiv);
+            this.removeCaptcha();
+
+            this.addCaptcha();
+            captchaDiv = document.createElement('div');
+            captchaDiv.setAttribute('class', 'g-recaptcha');
+            captchaDiv.setAttribute('data-sitekey', Sitekey);
+            c_div.appendChild(captchaDiv);
         }
     },
     created(){
-      let script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js';
-      document.head.appendChild(script);
+      this.addCaptcha();
     },
     destroyed(){
-      let script1 = document.querySelector('script[src="https://www.google.com/recaptcha/api.js"]');
-      let script2 = document.querySelector('script[src="https://www.gstatic.com/recaptcha/releases/P6KLRNy7h3K160ZmYNUOAce7/recaptcha__pl.js"]');
-      document.head.removeChild(script1);
-      document.head.removeChild(script2);
+      this.removeCaptcha();
     }
 }
 </script>

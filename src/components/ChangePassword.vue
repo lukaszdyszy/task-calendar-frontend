@@ -45,7 +45,7 @@ export default {
             RegExp('[0-9]{1,}').test(String(this.newPassword)) && 
             RegExp('[!@#$&%?_-]{1,}').test(String(this.newPassword)) && 
             this.newPassword.length>7)){
-                this.error = 'Password must contain min. 8 characters, uppercase, lowercase and special sign.';
+                this.error = 'Password must contain min. 8 characters, uppercase, lowercase and a special sign.';
             } else {
                 this.waitingForResponse = true;
                 this.$http.post(API + 'users/changePassword.php', {
