@@ -51,6 +51,9 @@ import API from '@/API.js';
 
 export default {
     name: 'SideCalendar',
+    props: {
+        p_date: Date
+    },
     data(){
         return{
             year: 2020,
@@ -107,7 +110,7 @@ export default {
         }
     },
     created(){
-        this.getDate(new Date());
+        this.getDate(new Date(this.p_date));
         this.getTasks();
     }
 }

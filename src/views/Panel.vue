@@ -15,7 +15,7 @@
                 <div class="hd">Tools</div>
                 <button @click="changePasswordForm=true">change password</button>
             </div>
-            <SideCalendar v-if="renderCalendar"/>
+            <SideCalendar v-if="renderCalendar" :p_date="date"/>
             <button @click="logout()" class="logout">Sign out</button>
         </div>
         <main class="main" v-if="loading == false">
