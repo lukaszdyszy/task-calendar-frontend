@@ -1,6 +1,6 @@
 <template>
-    <div class="panel">
-        <TaskForm v-if="loading==false && taskForm" mode="add" :p_date="parseDate" :p_time="parseTime"></TaskForm>
+    <div class="panel" v-if="!loading">
+        <TaskForm v-if="taskForm" mode="add" :p_date="parseDate" :p_time="parseTime" v-on:formSent="reload($event)"></TaskForm>
         <ChangePassword v-if="changePasswordForm"/>
         <div class="newTask" @click="taskForm=true">
             <i class="fas fa-plus-circle fa-3x"></i>
@@ -35,8 +35,8 @@
                 :id="task.ID" 
                 :title="task.title" 
                 :p_done="Boolean(+task.done)" 
-                :date_time="task.date_time"
-                ></Task>
+                :date_time="task.date_time" 
+                v-on:formSent="reload"></Task>
             </div>
         </main>
     </div>
@@ -65,7 +65,6 @@ export default {
             email: '',
             lOpen: false,
             date: '',
-            datePicker: '',
             tasks: [],
             loading: true,
             taskForm: false,
@@ -92,7 +91,7 @@ export default {
             this.$http.get(API + 'users/logout.php', {
                 'withCredentials': true
             }).then(function(response){
-                this.isLogged();
+                this.$router.push('/');
             });
         },
         getTasks(){
@@ -115,7 +114,9 @@ export default {
             this.date = newDate;
             this.getTasks();
         },
-        reload(){
+        reload(date){
+            this.date = new Date(date);
+            this.taskForm = false;
             this.getTasks();
             this.renderCalendar = false;
             let self = this;
@@ -219,9 +220,6 @@ button.logout{
     background-color: rgb(6, 194, 252);
     border: 1px solid rgb(39, 39, 39);
     padding: 10px;
-    // position: absolute;
-    // bottom: 0;
-    // left: 0;
     &:focus{
         outline: none;
     }

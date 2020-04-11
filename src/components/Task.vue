@@ -24,7 +24,8 @@
         :p_title="title" 
         :p_date="date_time.split(' ')[0]"  
         :p_time="date_time.split(' ')[1].slice(0, -3)" 
-        v-if="taskForm">
+        v-if="taskForm"
+        v-on:formSent="reload($event)">
         </TaskForm>
 
     </div>
@@ -59,7 +60,7 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.reload();
+                this.$emit('formSent', this.date_time);
             })
         },
         markDone(){
@@ -71,11 +72,11 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.reload();
+                this.$emit('formSent', this.date_time);
             })
         },
-        reload(){
-            this.$parent.reload();
+        reload(date){
+            this.$emit('formSent', date);
         }
     },
     created(){

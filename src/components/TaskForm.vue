@@ -1,5 +1,5 @@
 <template>
-    <div class="task-form" :class="{'shown': shown}">
+    <div class="task-form">
         <div class="form">
             <form @submit.prevent="send">
                 <input type="text" v-model="title" placeholder="Title">
@@ -19,7 +19,6 @@ import API from '@/API';
 export default {
     name: 'TaskForm',
     props: {
-        shown: Boolean,
         mode: String,
         id: Number,
         p_title: String,
@@ -49,8 +48,9 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.$router.push('/panel/'+this.date);
-                this.$router.go();
+                // this.$router.push('/panel/'+this.date);
+                // this.$router.go();
+                this.$emit('formSent', this.date);
             })
         },
         edit(){
@@ -62,8 +62,9 @@ export default {
                 'Content-Type': 'application/json',
                 'withCredentials': true
             }).then(function(response){
-                this.$router.push('/panel/'+this.date);
-                this.$router.go();
+                // this.$router.push('/panel/'+this.date);
+                // this.$router.go();
+                this.$emit('formSent', this.date);
             })
         },
         cancel(){
@@ -78,8 +79,7 @@ export default {
             this.time = this.p_time;
         }
     },
-    created(){
-        console.log(API);
+    created(){  
         if(this.mode == 'edit'){
             this.title = this.p_title;
         }

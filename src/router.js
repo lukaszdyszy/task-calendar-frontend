@@ -16,7 +16,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/panel/:date?',
+      path: '/panel/',
       name: 'Panel',
       component: Panel
     },
