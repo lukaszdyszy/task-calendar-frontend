@@ -14,14 +14,14 @@
 </template>
 
 <script>
-import API from '../API';
+import API from '@/API';
 
 export default {
     name: 'Login',
     data(){
         return {
             email: 'antek@gmail.com',
-            password: 'antek',
+            password: 'zaq1@WSX',
             error: false
         }
     },

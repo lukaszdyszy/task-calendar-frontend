@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import API from '../API';
-import Sitekey from '../Sitekey.js';
+import API from '@/API';
+import Sitekey from '@/Sitekey.js';
 
 export default {
     name: 'Registration',

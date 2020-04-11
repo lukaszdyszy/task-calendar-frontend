@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import API from '../API';
-import Task from '../components/Task';
-import TaskForm from '../components/TaskForm';
-import ChangePassword from '../components/ChangePassword';
-import SideCalendar from '../components/SideCalendar';
+import API from '@/API';
+import Task from '@/components/Task';
+import TaskForm from '@/components/TaskForm';
+import ChangePassword from '@/components/ChangePassword';
+import SideCalendar from '@/components/SideCalendar';
 import DatePicker from 'vue2-datepicker-improved';
 
 export default {
@@ -213,15 +213,15 @@ export default {
 
 
 button.logout{
-    width: calc(100% - 20px);
-    margin: 10px;
+    width: 100%;
+    margin-top: 45px;
     font-size: 1.2rem;
     background-color: rgb(6, 194, 252);
     border: 1px solid rgb(39, 39, 39);
     padding: 10px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    // position: absolute;
+    // bottom: 0;
+    // left: 0;
     &:focus{
         outline: none;
     }
@@ -246,8 +246,8 @@ button.logout{
 
 .newTask{
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 30px;
+    right: 30px;
     color: rgb(0, 109, 0);
     opacity: 0.7;
     &:hover{
@@ -282,6 +282,13 @@ button.logout{
         font-size: 1.5rem;
         bottom: 35px;
         right: 35px;
+    }
+    button.logout{
+        width: calc(100% - 20px);
+        margin: 10px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
     }
 }
 

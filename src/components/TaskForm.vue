@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import API from '../API';
+import API from '@/API';
 
 export default {
     name: 'TaskForm',
@@ -79,6 +79,7 @@ export default {
         }
     },
     created(){
+        console.log(API);
         if(this.mode == 'edit'){
             this.title = this.p_title;
         }

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import API from '../API';
+import API from '@/API';
 import TaskForm from './TaskForm';
 
 export default {
